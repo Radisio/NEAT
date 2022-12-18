@@ -7,6 +7,7 @@ public class ActivationFunctionTest {
         int tmp = (int) (entry*100000);
         return ((double)tmp)/100000;
     }
+
     @Test
     public void testBipolarSigmoidFunction(){
         BipolarSigmoidFunction bsf = new BipolarSigmoidFunction(1);

@@ -1,5 +1,7 @@
 package NeuralNetwork;
 
+import NeuralNetwork.Util.ConnectionUtil;
+
 public class Connection {
     private int innovationNumber;
     private int idNodeIn;
@@ -15,6 +17,15 @@ public class Connection {
         this.weight = weight;
         this.enabled = enabled;
         this.isRecurrent = isRecurrent;
+    }
+
+    public Connection(Connection con){
+        this.innovationNumber = con.getInnovationNumber();
+        this.idNodeIn = con.getIdNodeIn();
+        this.idNodeOut = con.getIdNodeOut();
+        this.weight = con.getWeight();
+        this.enabled = con.isEnabled();
+        this.isRecurrent = con.isRecurrent;
     }
 
     public int getInnovationNumber() {

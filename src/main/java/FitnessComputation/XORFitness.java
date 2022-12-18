@@ -7,9 +7,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class XORFitness implements FitnessComputation{
+public class XORFitness extends FitnessComputation{
+    public XORFitness(NeuralNetwork neuralNetwork) {
+        super(neuralNetwork);
+    }
+
     @Override
-    public double computeFitness(NeuralNetwork nn) {
+    public void computeFitness(NeuralNetwork nn) {
         List<List<Double>> entries = new ArrayList<>();
         entries.add(Arrays.asList(1.0,1.0, 0.0));
         entries.add(Arrays.asList(0.0,0.0, 0.0));
@@ -24,6 +28,8 @@ public class XORFitness implements FitnessComputation{
             double output = nn.getOutputs().get(0);
             error+= entries.get(i).get(2)-output;
         }
-        return error;
+        this.fitness = error;
     }
+
+
 }
