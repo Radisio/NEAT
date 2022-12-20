@@ -16,20 +16,21 @@ public class XORFitness extends FitnessComputation{
     public void computeFitness() {
         List<List<Double>> entries = new ArrayList<>();
         entries.add(Arrays.asList(1.0,1.0, 0.0));
-        entries.add(Arrays.asList(0.0,0.0, 0.0));
         entries.add(Arrays.asList(1.0,0.0, 1.0));
         entries.add(Arrays.asList(0.0,1.0, 1.0));
-        Collections.shuffle(entries);
-        double error = 0.0;
-        for(int i =0;i<4;i++)
+        entries.add(Arrays.asList(0.0,0.0, 0.0));
+
+        //Collections.shuffle(entries);
+        double score =4;
+        for(int i =0;i<entries.size();i++)
         {
+            neuralNetwork.resetNodeOutput();
             neuralNetwork.loadInput(entries.get(i).subList(0,2));
             neuralNetwork.runNetwork();
             double output = neuralNetwork.getOutputs().get(0);
-            error+= Math.abs(entries.get(i).get(2)-output);
-
+            score -= (Math.abs(entries.get(i).get(2)-output));
         }
-        this.fitness = 4-error;
+        this.fitness = score;
     }
     @Override
     public void debugCompute(){
@@ -42,11 +43,13 @@ public class XORFitness extends FitnessComputation{
         double error = 0.0;
         for(int i =0;i<4;i++)
         {
+            neuralNetwork.resetNodeOutput();
             neuralNetwork.loadInput(entries.get(i).subList(0,2));
             neuralNetwork.runNetwork();
             double output = neuralNetwork.getOutputs().get(0);
-            error+= Math.abs(entries.get(i).get(2)-output);
-            System.out.println("Inputs ("+entries.get(i).get(0)+"-" + entries.get(i).get(1)+") -> Output : " + output);
+            error+= 1-(Math.abs(entries.get(i).get(2)-output));
+            System.out.println("Fitness (1-|"+entries.get(i).get(2)+"-"+output+"|) =  " + error);
+            System.out.println("Inputs ("+entries.get(i).get(0)+"/" + entries.get(i).get(1)+") -> Output : " + output);
         }
     }
 

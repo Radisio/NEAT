@@ -72,7 +72,8 @@ public class Specie {
     public void computeAdjustedFitness(){
         int size = individuals.size();
         for(FitnessComputation individual : individuals){
-            individual.setAdjustedFitness(individual.getFitness()/(double)size);
+            double fitness = individual.getFitness();
+            individual.setAdjustedFitness(fitness/(double)size);
         }
         individuals.sort(((o1, o2) -> fitnessComparison.order(o2.getFitness(), o1.getFitness())));
 
@@ -89,7 +90,7 @@ public class Specie {
         {
             return false;
         }
-        int nbSurvivor =(int)Math.round(individuals.size() * crossOverRate);
+        int nbSurvivor =(int)Math.round(individuals.size() * (1-crossOverRate));
         if(nbSurvivor==0)
             nbSurvivor=1;
         individuals=individuals.subList(0,nbSurvivor);

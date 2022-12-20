@@ -1,6 +1,6 @@
 package GeneticAlgorithm.FitnessComputation;
 
-import NeuralNetwork.NeuralNetwork;
+import NeuralNetwork.*;
 
 public abstract class FitnessComputation {
     protected NeuralNetwork neuralNetwork;
@@ -16,6 +16,7 @@ public abstract class FitnessComputation {
     public NeuralNetwork getNeuralNetwork() {
         return neuralNetwork;
     }
+
 
     public void setNeuralNetwork(NeuralNetwork neuralNetwork) {
         this.neuralNetwork = neuralNetwork;
@@ -37,6 +38,10 @@ public abstract class FitnessComputation {
         this.adjustedFitness = adjustedFitness;
     }
 
+    public NeuralNetwork getResetedNeuralNetwork(){
+        this.neuralNetwork.resetNodeOutput();
+        return neuralNetwork;
+    }
 
 
 }

@@ -84,7 +84,7 @@ public class NeuralNetwork {
             {
                 for(int j=0;j<inputNode+1;j++){
                     if(r.nextDouble()<=percentageConnexion)
-                        connectionList.add(ConnectionUtil.createConnection(j,index, r.nextDouble()*2-1,true, false));
+                        connectionList.add(ConnectionUtil.createConnection(j,index, /*r.nextDouble()*2-1*/r.nextGaussian(),true, false));
                 }
             }
             int indexHiden = inputNode+1;
@@ -92,7 +92,7 @@ public class NeuralNetwork {
             {
                 for(int j=0;j<hiddenNode;j++, indexHiden++){
                     if(r.nextDouble()<=percentageConnexion)
-                        connectionList.add(ConnectionUtil.createConnection(indexHiden,index, r.nextDouble()*2-1,true, false));
+                        connectionList.add(ConnectionUtil.createConnection(indexHiden,index, /*r.nextDouble()*2-1*/r.nextGaussian(),true, false));
                 }
             }
         }
@@ -132,16 +132,24 @@ public class NeuralNetwork {
             {
                 if(connectionListCopy.get(j).getIdNodeOut() == nodeList.get(i).getId())
                 {
-                    nodeList.get(i).setSumInput(nodeList.get(i).getSumInput()+(nodeList.get(
-                            connectionList.get(j).getIdNodeIn()).getSumOutput() * connectionList.get(j).getWeight())
-                    );
+                    if(connectionListCopy.get(j).isEnabled()) {
+                        nodeList.get(i).setSumInput(nodeList.get(i).getSumInput() +
+                                (nodeList.get(NodeUtil.getIndexNodeById(connectionList.get(j).getIdNodeIn(), nodeList)).getSumOutput()
+                                        * connectionList.get(j).getWeight())
+                        );
+                    }
                 }
+                /*
                 if(nodeList.get(i).getType()==NodeType.OUTPUT)
                     nodeList.get(i).setSumOutput(outputLayerActivationFunction.threshold(nodeList.get(i).getSumInput()));
                 else
                     nodeList.get(i).setSumOutput(hiddenLayerActivationFunction.threshold(nodeList.get(i).getSumInput()));
-
+*/
             }
+            if(nodeList.get(i).getType()==NodeType.OUTPUT)
+                nodeList.get(i).setSumOutput(outputLayerActivationFunction.threshold(nodeList.get(i).getSumInput()));
+            else
+                nodeList.get(i).setSumOutput(hiddenLayerActivationFunction.threshold(nodeList.get(i).getSumInput()));
         }
     }
     public int findConnectionByInnovationNumber(int innovationNumber){
@@ -210,15 +218,15 @@ public class NeuralNetwork {
             throw new RuntimeException("Connection " + innovationNumberToBreak + " does not exist");
         }
         connectionList.get(index).setEnabled(false);
-        double newPosition = (nodeList.get(connectionList.get(index).getIdNodeIn()).getPosition()+
-                nodeList.get(connectionList.get(index).getIdNodeOut()).getPosition())/2.0;
+        double newPosition = (nodeList.get(NodeUtil.getIndexNodeById(connectionList.get(index).getIdNodeIn(), nodeList)).getPosition()+
+                nodeList.get(NodeUtil.getIndexNodeById(connectionList.get(index).getIdNodeOut(), nodeList)).getPosition())/2.0;
         Node newNode = new Node(nodeIdCounter++, NodeType.HIDDEN, 2, 0,0, newPosition);
         insertNewNode(newNode);
         connectionList.add(ConnectionUtil.createConnection(connectionList.get(index).getIdNodeIn(), newNode.getId(),
                 connectionList.get(index).getWeight(),true,false));
         Random r = new Random();
         connectionList.add(ConnectionUtil.createConnection(newNode.getId(),connectionList.get(index).getIdNodeOut(),
-                r.nextDouble()*2-1,true,false));
+                /*r.nextDouble()*2-1r.nextGaussian()*/1,true,false));
     }
     public void mutateAddWeight(int indexConnectionToChange){
         double weight = connectionList.get(indexConnectionToChange).getWeight();
@@ -248,7 +256,7 @@ public class NeuralNetwork {
     }
     public void mutateNewWeight(int indexConnectionToChange){
         Random r = new Random();
-        connectionList.get(indexConnectionToChange).setWeight(r.nextDouble()*2-1);
+        connectionList.get(indexConnectionToChange).setWeight(/*r.nextDouble()*2-1*/r.nextGaussian());
     }
     public void mutateNewWeightByIN(int innovationNumber){
         Random r = new Random();
@@ -257,7 +265,7 @@ public class NeuralNetwork {
         {
             throw new RuntimeException("Connection " + innovationNumber + " does not exist");
         }
-        connectionList.get(index).setWeight(r.nextDouble()*2-1);
+        connectionList.get(index).setWeight(/*r.nextDouble()*2-1*/r.nextGaussian());
     }
     private boolean doesConnectionExist(int idNodeIn, int idNodeOut){
         for(Connection con : connectionList){
@@ -308,10 +316,10 @@ public class NeuralNetwork {
                     if (!doesConnectionExist(nodeList.get(indexIn).getId(), nodeList.get(indexOut).getId())) {
                         if (nodeList.get(indexIn).getPosition() > nodeList.get(indexOut).getPosition() && recursiveEnable)
                             connectionList.add(ConnectionUtil.createConnection(nodeList.get(indexIn).getId(), nodeList.get(indexOut).getId(),
-                                    r.nextDouble()*2-1, true, true));
+                                    /*r.nextDouble()*2-1*/r.nextGaussian(), true, true));
                         else{
                             connectionList.add(ConnectionUtil.createConnection(nodeList.get(indexIn).getId(), nodeList.get(indexOut).getId(),
-                                    r.nextDouble()*2-1, true, false));
+                                    /*r.nextDouble()*2-1*/r.nextGaussian(), true, false));
                         }
                     }
                 }
@@ -329,6 +337,17 @@ public class NeuralNetwork {
             returnedList.add(nodeList.get(i).getSumOutput());
         }
         return returnedList;
+    }
+
+    public void resetNodeOutput(){
+        int size = nodeList.size();
+        for(int i =0;i<size; i++)
+        {
+            if(nodeList.get(i).getType()!=NodeType.INPUT && nodeList.get(i).getType()!=NodeType.BIAS){
+                nodeList.get(i).setSumInput(0.0);
+                nodeList.get(i).setSumOutput(0.0);
+            }
+        }
     }
 
 

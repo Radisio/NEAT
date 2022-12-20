@@ -1,5 +1,6 @@
 import NeuralNetwork.*;
 import NeuralNetwork.ActivationFunction.SigmoidFunction;
+import NeuralNetwork.Util.NodeUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -69,6 +70,7 @@ public class NeuralNetworkTest {
     public double roundUpTo9Digits(double entry){
         return (double)Math.round(entry*1000000000d)/1000000000d;
     }
+
     @Test
     public void testEvaluateNetworkWithoutHidden(){
         NeuralNetwork nn = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
@@ -93,6 +95,30 @@ public class NeuralNetworkTest {
         nn.runNetwork();
         assert roundUpTo9Digits(nn.getOutputs().get(0))==0.853673658;
     }
+
+    @Test
+    public void testEvaluateNetworkWithtHidden2(){
+        NeuralNetwork nn = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
+        nn.initialize(1);
+        nn.getConnectionList().get(0).setWeight(0.87);
+        nn.getConnectionList().get(1).setWeight(0.56);
+        nn.getConnectionList().get(2).setWeight(2.15);
+        nn.mutationBreakConnection(1);
+        nn.getConnectionList().get(4).setWeight(1.87);
+
+        nn.loadInput(Arrays.asList(0.5,0.4));
+        for(Connection con : nn.getConnectionList())
+        {
+            System.out.println("---------------");
+            System.out.println(con.getInnovationNumber());
+            System.out.println(con.getWeight());
+            System.out.println("Enabled : " + con.isEnabled());
+        }
+        nn.runNetwork();
+        System.out.println(nn.getOutputs().get(0));
+        assert roundUpTo9Digits(nn.getOutputs().get(0))==0.970948843;
+    }
+
     @Test
     public void testBreakConnection(){
         NeuralNetwork nn = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
@@ -136,5 +162,17 @@ public class NeuralNetworkTest {
         assert connectionList.get(4).getIdNodeIn()==4;
         assert connectionList.get(4).getIdNodeOut()==3;
         assert connectionList.get(4).isEnabled();
+    }
+
+    @Test
+    public void testGetNodeByID(){
+        NeuralNetwork nn = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
+        nn.initialize(1);
+        nn.mutationBreakConnection(1);
+        assert NodeUtil.getIndexNodeById(0, nn.getNodeList())==0;
+        assert NodeUtil.getIndexNodeById(1, nn.getNodeList())==1;
+        assert NodeUtil.getIndexNodeById(2, nn.getNodeList())==2;
+        assert NodeUtil.getIndexNodeById(3, nn.getNodeList())==4;
+        assert NodeUtil.getIndexNodeById(4, nn.getNodeList())==3;
     }
 }

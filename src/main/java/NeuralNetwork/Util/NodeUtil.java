@@ -14,4 +14,16 @@ public class NodeUtil {
         }
         return newNodeList;
     }
+
+    public static int getIndexNodeById(int id, List<Node> nodes){
+        int index =-1;
+        int size = nodes.size();
+        for(int i =0;i<size;i++) {
+            if (nodes.get(i).getId() == id) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
 }

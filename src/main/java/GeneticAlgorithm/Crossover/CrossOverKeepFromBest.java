@@ -10,25 +10,25 @@ public class CrossOverKeepFromBest implements CrossOver{
     public NeuralNetwork crossover(FitnessComputation fitnessComputation1, FitnessComputation fitnessComputation2) {
         NeuralNetwork bestNN, otherNN;
         if(fitnessComputation1.getFitness()>fitnessComputation2.getFitness()){
-            bestNN = new NeuralNetwork(fitnessComputation1.getNeuralNetwork());
-            otherNN = new NeuralNetwork(fitnessComputation2.getNeuralNetwork());
+            bestNN = new NeuralNetwork(fitnessComputation1.getResetedNeuralNetwork());
+            otherNN = new NeuralNetwork(fitnessComputation2.getResetedNeuralNetwork());
         }
         else if(fitnessComputation2.getFitness()>fitnessComputation1.getFitness())
         {
-            bestNN = new NeuralNetwork(fitnessComputation2.getNeuralNetwork());
-            otherNN = new NeuralNetwork(fitnessComputation1.getNeuralNetwork());
+            bestNN = new NeuralNetwork(fitnessComputation2.getResetedNeuralNetwork());
+            otherNN = new NeuralNetwork(fitnessComputation1.getResetedNeuralNetwork());
         }
         else{
             /// Random
             Random r = new Random();
             if(r.nextDouble()>0.5)
             {
-                bestNN = new NeuralNetwork(fitnessComputation1.getNeuralNetwork());
-                otherNN = new NeuralNetwork(fitnessComputation2.getNeuralNetwork());
+                bestNN = new NeuralNetwork(fitnessComputation1.getResetedNeuralNetwork());
+                otherNN = new NeuralNetwork(fitnessComputation2.getResetedNeuralNetwork());
             }
             else{
-                bestNN = new NeuralNetwork(fitnessComputation2.getNeuralNetwork());
-                otherNN = new NeuralNetwork(fitnessComputation1.getNeuralNetwork());
+                bestNN = new NeuralNetwork(fitnessComputation2.getResetedNeuralNetwork());
+                otherNN = new NeuralNetwork(fitnessComputation1.getResetedNeuralNetwork());
             }
         }
         int size1 = bestNN.getConnectionList().size();

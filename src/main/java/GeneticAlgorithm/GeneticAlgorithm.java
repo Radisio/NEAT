@@ -37,12 +37,15 @@ public class GeneticAlgorithm {
     private ActivationFunction outputActivationFunction;
     private double thresholdSpecie;
     private FitnessComparison fitnessComparison;
+    private int speciesTargetSize;
+    private double compat_mod;
     public GeneticAlgorithm(double mutationAddNodeRate, double mutationAddConnectionRate,
                             double mutationChangeUpWeight, double mutationChangeSubWeight, double mutationResetWeight,
                             double solution,double crossOverRate, int popSize, Selection parentSelection,
                             Selection crossoverSelection, CrossOver crossOver, String nameFitnessComputation,
                             int inputNode, int outputNode, int hiddenNode, ActivationFunction hiddenActivationFunction,
-                            ActivationFunction outputActivationFunction, double thresholdSpecie, FitnessComparison fitnessComparison) {
+                            ActivationFunction outputActivationFunction, double thresholdSpecie, FitnessComparison fitnessComparison,
+                            int speciesTargetSize, double compat_mod) {
         this.species = new ArrayList<>();
         this.mutationAddNodeRate = mutationAddNodeRate;
         this.mutationAddConnectionRate = mutationAddConnectionRate;
@@ -63,6 +66,8 @@ public class GeneticAlgorithm {
         this.outputActivationFunction = outputActivationFunction;
         this.thresholdSpecie = thresholdSpecie;
         this.fitnessComparison = fitnessComparison;
+        this.speciesTargetSize = speciesTargetSize;
+        this.compat_mod = compat_mod;
     }
     private int getLastIdSpecie(){
         int returnedId = 0;
@@ -71,7 +76,14 @@ public class GeneticAlgorithm {
                 returnedId = species.get(i).getId();
         return returnedId;
     }
+    private void adaptThreshold(){
+        if(species.size()<speciesTargetSize)
+            thresholdSpecie+=compat_mod;
+        else if (species.size()>speciesTargetSize)
+            thresholdSpecie-=compat_mod;
 
+        if(thresholdSpecie<0.3) thresholdSpecie=0.3;
+    }
     private void gen0(){
         List<FitnessComputation> firstPop = FitnessComputationUtil.generate(this.nameFitnessComputation,
                 this.popSize, this.inputNode, this.outputNode, this.hiddenNode, this.hiddenActivationFunction, this.outputActivationFunction);
@@ -84,6 +96,7 @@ public class GeneticAlgorithm {
             newSpecie.add(firstMemberOfNewSpecie);
             for(int i =0;i<firstPop.size();i++)
             {
+
                 if(SpecieUtil.getDifferenceBetweenTwoIndividuals(firstMemberOfNewSpecie.getNeuralNetwork(), firstPop.get(i).getNeuralNetwork())<this.thresholdSpecie)
                 {
                     newSpecie.add(firstPop.get(i));
@@ -140,6 +153,7 @@ public class GeneticAlgorithm {
         return returnedFc;
     }
 
+
     public FitnessComputation runAlgorithm(int maxIter){
         gen0();
         int generationCount = 1;
@@ -150,7 +164,10 @@ public class GeneticAlgorithm {
             System.out.println("Nb connexion : " + getFittestOverAll().getNeuralNetwork().getConnectionList().size());
             System.out.println("Nb Node : " + getFittestOverAll().getNeuralNetwork().getNodeList().size());
             System.out.println("Number of species : " + species.size());
-
+            System.out.println("Nb pop : " + numberPopTotal() );
+            System.out.println("Threshold : " + thresholdSpecie);
+            System.out.println("Target species size : " + speciesTargetSize);
+            adaptThreshold();
             evolvePopulation();
             evaluatePopulation();
             generationCount++;
@@ -193,6 +210,45 @@ public class GeneticAlgorithm {
     private void mutate(List<FitnessComputation> fcList){
         Random r = new Random();
         for(FitnessComputation fit : fcList){
+            if(r.nextDouble()<0.8)
+            {
+                int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
+                if(r.nextDouble()<0.9)
+                {
+                    if(r.nextDouble()<0.5)
+                    {
+                        if(randomInnovationNumberEnnabled!=-1)
+                            fit.getNeuralNetwork().mutateSubWeightByIN(randomInnovationNumberEnnabled);
+                    }
+                    else{
+                        if(randomInnovationNumberEnnabled!=-1)
+                            fit.getNeuralNetwork().mutateAddWeightByIN(randomInnovationNumberEnnabled);
+
+                    }
+                }
+                else{
+                    if(randomInnovationNumberEnnabled!=-1)
+                        fit.getNeuralNetwork().mutateNewWeightByIN(randomInnovationNumberEnnabled);
+                }
+            }
+            else{
+                if(r.nextDouble()<mutationAddNodeRate)
+                {
+                    int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
+                    if(randomInnovationNumberEnnabled!=-1) {
+                        fit.getNeuralNetwork().mutationBreakConnection(randomInnovationNumberEnnabled);
+                }
+                else
+                {
+                    if(r.nextDouble()<mutationAddConnectionRate)
+                    {
+                        fit.getNeuralNetwork().addConnection();
+                    }
+                }
+            }
+        }
+        /*
+        for(FitnessComputation fit : fcList){
             if(r.nextDouble()<mutationAddNodeRate) {
                 int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
                 if(randomInnovationNumberEnnabled!=-1) {
@@ -223,7 +279,7 @@ public class GeneticAlgorithm {
                 if(randomInnovationNumberEnnabled!=-1) {
                     fit.getNeuralNetwork().mutateAddWeightByIN(randomInnovationNumberEnnabled);
                 }
-            }
+            }*/
         }
     }
 
@@ -248,7 +304,12 @@ public class GeneticAlgorithm {
         else{
             ///Too many individuals, kill the weaks
             int difference = spec.getIndividuals().size()-(int)Math.round(spec.getOffSpringAllowed());
-            spec.getIndividuals().subList(0, spec.getIndividuals().size()-difference);
+            int remain = spec.getIndividuals().size()-difference;
+            if(remain>0)
+                spec.getIndividuals().subList(0, remain);
+            else{
+                spec.getIndividuals().clear();
+            }
         }
     }
     private int numberPopTotal(){
@@ -259,10 +320,22 @@ public class GeneticAlgorithm {
     }
     private void evolvePopulation(){
         killSpecies();
+
         ///On va créer les enfants des espèces
         fillSpecies();
+        ///Delete species empty
+        for(int i = 0;i<species.size();i++)
+        {
+            if(species.get(i).getIndividuals().size()==0)
+            {
+                species.remove(i);
+                i--;
+            }
+        }
+        System.out.println("Species size : " + species.size());
         int count = numberPopTotal();
         List<FitnessComputation> pop = new ArrayList<>();
+        System.out.println("Count : " + count);
         if(count<this.popSize)
         {
             pop =fillPop(count);
@@ -277,6 +350,7 @@ public class GeneticAlgorithm {
             pop.addAll(spe.getIndividuals());
             spe.setIndividuals(new ArrayList<>());
         }
+
         for(int i =0;i<presidents.size();i++)
         {
             for(int j=0;j<pop.size();j++)
@@ -288,6 +362,7 @@ public class GeneticAlgorithm {
                     j--;
                 }
             }
+            species.get(i).addIndividual(presidents.get(i));
         }
         while(pop.size()!=0)
         {
@@ -325,6 +400,7 @@ public class GeneticAlgorithm {
         for(int i =0;i<count;i++)
         {
             int specieIndex = (int) (Math.random() * species.size());
+            System.out.println("Species indexed size : " + species.get(specieIndex).getIndividuals().size());
             FitnessComputation fc1 = crossoverSelection.select(species.get(specieIndex),1).get(0);
             specieIndex = (int) (Math.random() * species.size());
             FitnessComputation fc2  = crossoverSelection.select(species.get(specieIndex),1).get(0);
@@ -334,7 +410,6 @@ public class GeneticAlgorithm {
     }
 
     private List<FitnessComputation> fillPop(int count){
-        System.out.println("Fill pop");
         int difference = this.popSize - count;
         List<FitnessComputation> newIndividuals = FitnessComputationUtil.generate(this.nameFitnessComputation,
                 difference, this.inputNode, this.outputNode, this.hiddenNode, this.hiddenActivationFunction, this.outputActivationFunction);
