@@ -97,7 +97,7 @@ public class NeuralNetworkTest {
     public void testBreakConnection(){
         NeuralNetwork nn = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
         nn.initialize(1);
-        nn.breakConnection(1);
+        nn.mutationBreakConnection(1);
         List<Node> nodeList = nn.getNodeList();
         assert nodeList.size()==5;
         assert nodeList.get(0).getType()==NodeType.INPUT;

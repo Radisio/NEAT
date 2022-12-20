@@ -3,7 +3,7 @@ package NeuralNetwork.ActivationFunction;
 public class SigmoidFunction implements ActivationFunction{
     private double k;
     public SigmoidFunction(){
-        this.k = 0;
+        this.k = 1;
     }
     public SigmoidFunction(double k){
         this.k = k;

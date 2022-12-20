@@ -1,6 +1,6 @@
-package Crossover;
+package GeneticAlgorithm.Crossover;
 
-import FitnessComputation.FitnessComputation;
+import GeneticAlgorithm.FitnessComputation.FitnessComputation;
 import NeuralNetwork.NeuralNetwork;
 
 public interface CrossOver {

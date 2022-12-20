@@ -1,6 +1,6 @@
-import Crossover.CrossOver;
-import Crossover.CrossOverKeepFromBest;
-import FitnessComputation.XORFitness;
+import GeneticAlgorithm.Crossover.CrossOver;
+import GeneticAlgorithm.Crossover.CrossOverKeepFromBest;
+import GeneticAlgorithm.FitnessComputation.XORFitness;
 import NeuralNetwork.ActivationFunction.SigmoidFunction;
 import NeuralNetwork.NeuralNetwork;
 import org.junit.Test;
@@ -11,11 +11,11 @@ public class CrossOverTest {
     public void CrossOverKeepFromBest1(){
         NeuralNetwork nn1 = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
         nn1.initialize(1);
-        nn1.breakConnection(1);
+        nn1.mutationBreakConnection(1);
         NeuralNetwork nn2 = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
         nn2.initialize(1);
-        nn2.breakConnection(1);
-        nn2.breakConnection(3);
+        nn2.mutationBreakConnection(1);
+        nn2.mutationBreakConnection(3);
 
         XORFitness fittest = new XORFitness(nn1);
         fittest.setFitness(50);
@@ -47,11 +47,11 @@ public class CrossOverTest {
     public void CrossOverKeepFromBest2() {
         NeuralNetwork nn1 = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
         nn1.initialize(1);
-        nn1.breakConnection(1);
+        nn1.mutationBreakConnection(1);
         NeuralNetwork nn2 = new NeuralNetwork(2,1,0, new SigmoidFunction(1), new SigmoidFunction(1));
         nn2.initialize(1);
-        nn2.breakConnection(1);
-        nn2.breakConnection(3);
+        nn2.mutationBreakConnection(1);
+        nn2.mutationBreakConnection(3);
 
         XORFitness fittest = new XORFitness(nn2);
         fittest.setFitness(50);

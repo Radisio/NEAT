@@ -1,5 +1,9 @@
 package GeneticAlgorithm.Speciation;
 
+import GeneticAlgorithm.Crossover.CrossOver;
+import GeneticAlgorithm.FitnessComputation.FitnessComputation;
+import GeneticAlgorithm.Selection.Selection;
+import GeneticAlgorithm.Selection.TournamentSelection;
 import NeuralNetwork.*;
 import NeuralNetwork.Util.ConnectionUtil;
 
@@ -51,6 +55,8 @@ public class SpecieUtil {
                     {
                         connection2Tmp.remove(j);
                         j--;
+                        continue;
+
                     }
                     if ((connection1Tmp.get(i).getInnovationNumber() == connection2Tmp.get(j).getInnovationNumber())) {
                         find = true;
@@ -106,10 +112,6 @@ public class SpecieUtil {
         int D = getNumberOfDisjointConnection(connection1, connection2);
         double W = getMeanAbsoluteDifferenceWeight(connection1, connection2);
         int N = getNumberOfEnabledConnectionFromLargestGenomes(connection1, connection2);
-        System.out.println("E = " + E);
-        System.out.println("D = " + D);
-        System.out.println("W = " + W);
-        System.out.println("N = " + N);
         return c1*((double)E/(double)N)+c2*((double)D/(double)N)+c3*W;
 
     }
@@ -134,4 +136,6 @@ public class SpecieUtil {
         }
         return count;
     }
+
+
 }

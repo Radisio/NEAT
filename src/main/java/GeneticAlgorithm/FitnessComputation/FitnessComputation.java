@@ -1,4 +1,4 @@
-package FitnessComputation;
+package GeneticAlgorithm.FitnessComputation;
 
 import NeuralNetwork.NeuralNetwork;
 
@@ -11,8 +11,8 @@ public abstract class FitnessComputation {
         this.neuralNetwork = neuralNetwork;
     }
 
-    abstract void computeFitness(NeuralNetwork nn);
-
+    public abstract void computeFitness();
+    public abstract void debugCompute();
     public NeuralNetwork getNeuralNetwork() {
         return neuralNetwork;
     }

@@ -84,7 +84,7 @@ public class NeuralNetwork {
             {
                 for(int j=0;j<inputNode+1;j++){
                     if(r.nextDouble()<=percentageConnexion)
-                        connectionList.add(ConnectionUtil.createConnection(j,index, r.nextGaussian(),true, false));
+                        connectionList.add(ConnectionUtil.createConnection(j,index, r.nextDouble()*2-1,true, false));
                 }
             }
             int indexHiden = inputNode+1;
@@ -92,7 +92,7 @@ public class NeuralNetwork {
             {
                 for(int j=0;j<hiddenNode;j++, indexHiden++){
                     if(r.nextDouble()<=percentageConnexion)
-                        connectionList.add(ConnectionUtil.createConnection(indexHiden,index, r.nextGaussian(),true, false));
+                        connectionList.add(ConnectionUtil.createConnection(indexHiden,index, r.nextDouble()*2-1,true, false));
                 }
             }
         }
@@ -101,7 +101,7 @@ public class NeuralNetwork {
             {
                 for(int j=0;j<inputNode+1;j++){
                     if(r.nextDouble()<=percentageConnexion)
-                        connectionList.add(ConnectionUtil.createConnection(j,index, r.nextGaussian(),true, false));
+                        connectionList.add(ConnectionUtil.createConnection(j,index, r.nextDouble()*2-1,true, false));
                 }
             }
         }
@@ -164,7 +164,46 @@ public class NeuralNetwork {
         }
     }
     ///region Mutation
-    public void breakConnection(int innovationNumberToBreak){
+    public int getRandomInnovationNumberEnabled(){
+        int INReturned = -1;
+        int count = 0;
+        while(count<20 && INReturned==-1)
+        {
+            Connection con = connectionList.get((int) (Math.random() * connectionList.size()));
+            if(con.isEnabled())
+                INReturned=con.getInnovationNumber();
+            count++;
+        }
+        if(INReturned==-1)
+        {
+            for(Connection con : connectionList)
+            {
+                if(con.isEnabled())
+                    INReturned = con.getInnovationNumber();
+            }
+        }
+        return INReturned;
+    }
+    public int getIndexOfRandomInnovationNumberEnabled(){
+        int index = -1;
+        int count = 0;
+        while(count<20 && index==-1)
+        {
+            Connection con = connectionList.get((int) (Math.random() * connectionList.size()));
+            if(con.isEnabled())
+                index=connectionList.indexOf(con);
+            count++;
+        }
+        if(index==-1)
+        {
+            for(int i=0;i<connectionList.size();i++)
+                if(connectionList.get(i).isEnabled())
+                    index = i;
+
+        }
+        return index;
+    }
+    public void mutationBreakConnection(int innovationNumberToBreak){
         int index = findConnectionByInnovationNumber(innovationNumberToBreak);
         if(index==-1)
         {
@@ -179,19 +218,46 @@ public class NeuralNetwork {
                 connectionList.get(index).getWeight(),true,false));
         Random r = new Random();
         connectionList.add(ConnectionUtil.createConnection(newNode.getId(),connectionList.get(index).getIdNodeOut(),
-                r.nextGaussian(),true,false));
+                r.nextDouble()*2-1,true,false));
     }
     public void mutateAddWeight(int indexConnectionToChange){
         double weight = connectionList.get(indexConnectionToChange).getWeight();
         connectionList.get(indexConnectionToChange).setWeight(weight + (weight*0.2));
     }
+    public void mutateAddWeightByIN(int innovationNumber){
+        int index = findConnectionByInnovationNumber(innovationNumber);
+        if(index==-1)
+        {
+            throw new RuntimeException("Connection " + innovationNumber + " does not exist");
+        }
+        double weight = connectionList.get(index).getWeight();
+        connectionList.get(index).setWeight(weight + (weight*0.2));
+    }
     public void mutateSubWeight(int indexConnectionToChange){
         double weight = connectionList.get(indexConnectionToChange).getWeight();
         connectionList.get(indexConnectionToChange).setWeight(weight - (weight*0.2));
     }
+    public void mutateSubWeightByIN(int innovationNumber){
+        int index = findConnectionByInnovationNumber(innovationNumber);
+        if(index==-1)
+        {
+            throw new RuntimeException("Connection " + innovationNumber + " does not exist");
+        }
+        double weight = connectionList.get(index).getWeight();
+        connectionList.get(index).setWeight(weight - (weight*0.2));
+    }
     public void mutateNewWeight(int indexConnectionToChange){
         Random r = new Random();
-        connectionList.get(indexConnectionToChange).setWeight(r.nextGaussian());
+        connectionList.get(indexConnectionToChange).setWeight(r.nextDouble()*2-1);
+    }
+    public void mutateNewWeightByIN(int innovationNumber){
+        Random r = new Random();
+        int index = findConnectionByInnovationNumber(innovationNumber);
+        if(index==-1)
+        {
+            throw new RuntimeException("Connection " + innovationNumber + " does not exist");
+        }
+        connectionList.get(index).setWeight(r.nextDouble()*2-1);
     }
     private boolean doesConnectionExist(int idNodeIn, int idNodeOut){
         for(Connection con : connectionList){
@@ -242,10 +308,10 @@ public class NeuralNetwork {
                     if (!doesConnectionExist(nodeList.get(indexIn).getId(), nodeList.get(indexOut).getId())) {
                         if (nodeList.get(indexIn).getPosition() > nodeList.get(indexOut).getPosition() && recursiveEnable)
                             connectionList.add(ConnectionUtil.createConnection(nodeList.get(indexIn).getId(), nodeList.get(indexOut).getId(),
-                                    r.nextGaussian(), true, true));
+                                    r.nextDouble()*2-1, true, true));
                         else{
                             connectionList.add(ConnectionUtil.createConnection(nodeList.get(indexIn).getId(), nodeList.get(indexOut).getId(),
-                                    r.nextGaussian(), true, false));
+                                    r.nextDouble()*2-1, true, false));
                         }
                     }
                 }

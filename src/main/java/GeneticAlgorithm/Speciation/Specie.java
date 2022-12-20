@@ -1,9 +1,8 @@
 package GeneticAlgorithm.Speciation;
 
-import FitnessComparison.FitnessComparison;
-import FitnessComputation.FitnessComputation;
+import GeneticAlgorithm.FitnessComparison.FitnessComparison;
+import GeneticAlgorithm.FitnessComputation.FitnessComputation;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +72,28 @@ public class Specie {
     public void computeAdjustedFitness(){
         int size = individuals.size();
         for(FitnessComputation individual : individuals){
-            individual.setAdjustedFitness(individual.getFitness()/size);
+            individual.setAdjustedFitness(individual.getFitness()/(double)size);
         }
+        individuals.sort(((o1, o2) -> fitnessComparison.order(o2.getFitness(), o1.getFitness())));
+
+    }
+
+    /***
+     *
+     * @param crossOverRate
+     * @param isBestSpecie
+     * @return false if specie has to be killed/ true if there is still some members
+     */
+    public boolean killPopulation(double crossOverRate, boolean isBestSpecie){
+        if(generationSinceImproved>=15 && !isBestSpecie)
+        {
+            return false;
+        }
+        int nbSurvivor =(int)Math.round(individuals.size() * crossOverRate);
+        if(nbSurvivor==0)
+            nbSurvivor=1;
+        individuals=individuals.subList(0,nbSurvivor);
+        return true;
     }
 
     public double getOffSpringAllowed() {
@@ -91,4 +110,31 @@ public class Specie {
     public void addIndividual(FitnessComputation fc){
         individuals.add(fc);
     }
+    public FitnessComputation getIndividualByIndex(int index){return individuals.get(index);}
+
+    public FitnessComputation getFittest(){
+        FitnessComputation returned = null;
+        int size = individuals.size();
+        if(size>0) {
+            returned = individuals.get(0);
+            for (int i = 1; i < size; i++)
+            {
+                if(fitnessComparison.fitness1Better(individuals.get(i).getFitness(),returned.getFitness()))
+                {
+                    returned = individuals.get(i);
+                }
+            }
+        }
+        return returned;
+    }
+
+    public FitnessComparison getFitnessComparison() {
+        return fitnessComparison;
+    }
+
+    public FitnessComputation randomIndividual(){
+        return individuals.get((int)(Math.random()*individuals.size()));
+    }
+
+
 }
