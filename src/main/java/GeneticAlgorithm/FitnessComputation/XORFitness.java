@@ -48,7 +48,6 @@ public class XORFitness extends FitnessComputation{
             neuralNetwork.runNetwork();
             double output = neuralNetwork.getOutputs().get(0);
             error+= 1-(Math.abs(entries.get(i).get(2)-output));
-            System.out.println("Fitness (1-|"+entries.get(i).get(2)+"-"+output+"|) =  " + error);
             System.out.println("Inputs ("+entries.get(i).get(0)+"/" + entries.get(i).get(1)+") -> Output : " + output);
         }
     }

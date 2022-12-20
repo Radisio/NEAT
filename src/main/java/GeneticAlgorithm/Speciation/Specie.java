@@ -75,7 +75,7 @@ public class Specie {
             double fitness = individual.getFitness();
             individual.setAdjustedFitness(fitness/(double)size);
         }
-        individuals.sort(((o1, o2) -> fitnessComparison.order(o2.getFitness(), o1.getFitness())));
+        individuals.sort(((o1, o2) -> fitnessComparison.order(o1.getFitness(), o2.getFitness())));
 
     }
 
@@ -137,5 +137,7 @@ public class Specie {
         return individuals.get((int)(Math.random()*individuals.size()));
     }
 
-
+    public int getGenerationSinceImproved() {
+        return generationSinceImproved;
+    }
 }

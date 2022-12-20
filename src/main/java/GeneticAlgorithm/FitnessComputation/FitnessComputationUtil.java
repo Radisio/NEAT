@@ -18,7 +18,10 @@ public class FitnessComputationUtil {
                 break;
             }
             case "GAME":{
-                throw new RuntimeException("Not implemented yet");
+                for(int i =0;i<size;i++) {
+                    returnedList.add(new GameFitness(nn));
+                }
+                break;
             }
             default:
                 throw new RuntimeException("Name unknown");
@@ -39,7 +42,12 @@ public class FitnessComputationUtil {
                 break;
             }
             case "GAME":{
-                throw new RuntimeException("Not implemented yet");
+                for(int i =0;i<size;i++) {
+                    nn = new NeuralNetwork(inputNode,outputNode, hiddenNode, hiddenLayerActivationFunction, outputLayerActivationFunction);
+                    nn.initialize(1.0);
+                    returnedList.add(new GameFitness(nn));
+                }
+                break;
             }
             default:
                 throw new RuntimeException("Name unknown");

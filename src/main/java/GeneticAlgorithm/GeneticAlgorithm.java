@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GeneticAlgorithm {
     private List<Specie> species;
@@ -128,7 +130,7 @@ public class GeneticAlgorithm {
     }
 
     private double getBestFitnessValue(){
-        double bestFitness = -1;
+        double bestFitness = fitnessComparison.worstFitness();
         for(Specie spe: species)
         {
             if(fitnessComparison.fitness1Better(spe.getFittest().getFitness(),bestFitness))
@@ -158,6 +160,8 @@ public class GeneticAlgorithm {
         gen0();
         int generationCount = 1;
         evaluatePopulation();
+        System.out.println("Solution : " + this.solution);
+        System.out.println("Best value : " + getBestFitnessValue());
         while(fitnessComparison.fitness1Better(this.solution, getBestFitnessValue()) && generationCount<maxIter){
             System.out.println("Génération : " + generationCount);
             System.out.println("Best score : " + getBestFitnessValue());
@@ -180,7 +184,7 @@ public class GeneticAlgorithm {
     }
     private int getBestSpecieIndex(){
         int index = -1;
-        double bestFitness = -1;
+        double bestFitness = fitnessComparison.worstFitness();
         for(int i =0;i<species.size();i++)
         {
             if(fitnessComparison.fitness1Better(species.get(i).getFittest().getFitness(),bestFitness))
@@ -308,7 +312,11 @@ public class GeneticAlgorithm {
             if(remain>0)
                 spec.getIndividuals().subList(0, remain);
             else{
-                spec.getIndividuals().clear();
+                if(spec.getGenerationSinceImproved()>15)
+                    spec.getIndividuals().clear();
+                else{
+                    spec.getIndividuals().subList(0,1);
+                }
             }
         }
     }
