@@ -17,9 +17,9 @@ public class Program {
     private static void XOR(){
         GeneticAlgorithm ga = new GeneticAlgorithm(
                 0.04, 0.1,
-                0.3, 0.3, 0.1,
+                0.5, 0.8, 0.9,
                 3.95,0.4, 50, new TournamentSelection(2),
-                new TournamentSelection(2), new CrossOverKeepFromBest(), "XOR",
+                new CrossOverKeepFromBest(), "XOR",
                 2, 1, 0, new SigmoidFunction(4.9),
                 /*new SigmoidFunction(4.9)*/new GaussianFunction(), 0.3, new XORComparison(),
                 5, 0.3
@@ -31,9 +31,9 @@ public class Program {
     private static void Game(){
         GeneticAlgorithm ga = new GeneticAlgorithm(
                 0.04, 0.1,
-                0.3, 0.3, 0.1,
-                0,0.4, 10, new TournamentSelection(2),
-                new TournamentSelection(2), new CrossOverKeepFromBest(), "GAME",
+                0.5, 0.8, 0.9,
+                3.95,0.4, 50, new TournamentSelection(2),
+                new CrossOverKeepFromBest(),"GAME",
                 404, 8, 0, new SigmoidFunction(4.9),
                 /*new SigmoidFunction(4.9)*/new IdentityFunction(), 0.3, new GameComparison(),
                 5, 0.3
@@ -43,6 +43,6 @@ public class Program {
         fc.debugCompute();
     }
     public static void main(String[] args) {
-        Game();
+        XOR();
     }
 }

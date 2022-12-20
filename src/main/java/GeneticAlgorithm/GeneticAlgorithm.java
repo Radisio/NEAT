@@ -23,12 +23,11 @@ public class GeneticAlgorithm {
     private double mutationAddNodeRate;
     private double mutationAddConnectionRate;
     private double mutationChangeUpWeight;
-    private double mutationChangeSubWeight;
-    private double mutationResetWeight;
+    private double mutationChangeWeight;
+    private double mutationModifyWeight;
     private double solution;
     private double crossOverRate; /// aka survivalRate (Easier for me to understand)
     private int popSize;
-    private Selection parentSelection;
     private Selection crossoverSelection;
     private CrossOver crossOver;
     private String nameFitnessComputation;
@@ -42,8 +41,8 @@ public class GeneticAlgorithm {
     private int speciesTargetSize;
     private double compat_mod;
     public GeneticAlgorithm(double mutationAddNodeRate, double mutationAddConnectionRate,
-                            double mutationChangeUpWeight, double mutationChangeSubWeight, double mutationResetWeight,
-                            double solution,double crossOverRate, int popSize, Selection parentSelection,
+                            double mutationChangeUpWeight, double mutationChangeWeight, double mutationModifyWeight,
+                            double solution,double crossOverRate, int popSize,
                             Selection crossoverSelection, CrossOver crossOver, String nameFitnessComputation,
                             int inputNode, int outputNode, int hiddenNode, ActivationFunction hiddenActivationFunction,
                             ActivationFunction outputActivationFunction, double thresholdSpecie, FitnessComparison fitnessComparison,
@@ -52,12 +51,11 @@ public class GeneticAlgorithm {
         this.mutationAddNodeRate = mutationAddNodeRate;
         this.mutationAddConnectionRate = mutationAddConnectionRate;
         this.mutationChangeUpWeight = mutationChangeUpWeight;
-        this.mutationChangeSubWeight = mutationChangeSubWeight;
-        this.mutationResetWeight = mutationResetWeight;
+        this.mutationChangeWeight = mutationChangeWeight;
+        this.mutationModifyWeight = mutationModifyWeight;
         this.solution = solution;
         this.crossOverRate = crossOverRate;
         this.popSize = popSize;
-        this.parentSelection = parentSelection;
         this.crossoverSelection = crossoverSelection;
         this.crossOver = crossOver;
         this.nameFitnessComputation = nameFitnessComputation;
@@ -214,12 +212,12 @@ public class GeneticAlgorithm {
     private void mutate(List<FitnessComputation> fcList){
         Random r = new Random();
         for(FitnessComputation fit : fcList){
-            if(r.nextDouble()<0.8)
+            if(r.nextDouble()<this.mutationChangeWeight)
             {
                 int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
-                if(r.nextDouble()<0.9)
+                if(r.nextDouble()<this.mutationModifyWeight)
                 {
-                    if(r.nextDouble()<0.5)
+                    if(r.nextDouble()<this.mutationChangeUpWeight)
                     {
                         if(randomInnovationNumberEnnabled!=-1)
                             fit.getNeuralNetwork().mutateSubWeightByIN(randomInnovationNumberEnnabled);
