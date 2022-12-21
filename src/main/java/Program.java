@@ -39,7 +39,6 @@ public class Program {
                 5, 0.3
         );
         FitnessComputation fc =ga.runAlgorithm(10);
-        System.out.println("FINI");
         fc.debugCompute();
     }
     public static void main(String[] args) {

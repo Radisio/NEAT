@@ -163,12 +163,6 @@ public class GeneticAlgorithm {
         while(fitnessComparison.fitness1Better(this.solution, getBestFitnessValue()) && generationCount<maxIter){
             System.out.println("Génération : " + generationCount);
             System.out.println("Best score : " + getBestFitnessValue());
-            System.out.println("Nb connexion : " + getFittestOverAll().getNeuralNetwork().getConnectionList().size());
-            System.out.println("Nb Node : " + getFittestOverAll().getNeuralNetwork().getNodeList().size());
-            System.out.println("Number of species : " + species.size());
-            System.out.println("Nb pop : " + numberPopTotal() );
-            System.out.println("Threshold : " + thresholdSpecie);
-            System.out.println("Target species size : " + speciesTargetSize);
             adaptThreshold();
             evolvePopulation();
             evaluatePopulation();

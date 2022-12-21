@@ -12,28 +12,6 @@ import java.util.List;
 public class GameNeat {
     public static List<Double> gameToNNInput(Game game, int nbInput)
     {
-        /* Fonctionne mais statique
-        Environment env = game.getEnvironment();
-        if((env.getBoard().length*env.getBoard()[0].length)+4 != nbInput)
-            throw new RuntimeException("Input layer wrong size");
-        int nLine = env.getBoard().length;
-        int nCol = env.getBoard()[0].length;
-        List<Double> returnedList = new ArrayList<>();
-        for(int i =0;i<nLine;i++)
-        {
-            for(int j =0;j<nCol;j++)
-            {
-                if(env.getBoard()[i][j].getOccupation()== DesignConst.EMPTY)
-                    returnedList.add(0.0);
-                else
-                    returnedList.add(1.0);
-            }
-        }
-        returnedList.add(game.getCreaturePosition().x*1.0);
-        returnedList.add(game.getCreaturePosition().y*1.0);
-        returnedList.add(env.getEndingPos().x*1.0);
-        returnedList.add(env.getEndingPos().y*1.0);
-        return returnedList;*/
         Environment env = game.getEnvironment();
         int nodeEnv = env.getBoard().length*env.getBoard()[0].length;
         if(nodeEnv+4 > nbInput)
