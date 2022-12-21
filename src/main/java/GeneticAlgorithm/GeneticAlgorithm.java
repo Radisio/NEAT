@@ -243,39 +243,6 @@ public class GeneticAlgorithm {
                 }
             }
         }
-        /*
-        for(FitnessComputation fit : fcList){
-            if(r.nextDouble()<mutationAddNodeRate) {
-                int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
-                if(randomInnovationNumberEnnabled!=-1) {
-                    fit.getNeuralNetwork().mutationBreakConnection(randomInnovationNumberEnnabled);
-                    continue;
-                }
-            }
-            if(r.nextDouble()<mutationAddConnectionRate){
-                fit.getNeuralNetwork().addConnection();
-                continue;
-            }
-            if(r.nextDouble()<mutationChangeSubWeight){
-                int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
-                if(randomInnovationNumberEnnabled!=-1) {
-                    fit.getNeuralNetwork().mutateSubWeightByIN(randomInnovationNumberEnnabled);
-                    continue;
-                }
-            }
-            if(r.nextDouble()<mutationResetWeight){
-                int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
-                if(randomInnovationNumberEnnabled!=-1) {
-                    fit.getNeuralNetwork().mutateNewWeightByIN(randomInnovationNumberEnnabled);
-                    continue;
-                }
-            }
-            if(r.nextDouble()<mutationChangeUpWeight){
-                int randomInnovationNumberEnnabled = fit.getNeuralNetwork().getRandomInnovationNumberEnabled();
-                if(randomInnovationNumberEnnabled!=-1) {
-                    fit.getNeuralNetwork().mutateAddWeightByIN(randomInnovationNumberEnnabled);
-                }
-            }*/
         }
     }
 
@@ -332,10 +299,8 @@ public class GeneticAlgorithm {
                 i--;
             }
         }
-        System.out.println("Species size : " + species.size());
         int count = numberPopTotal();
         List<FitnessComputation> pop = new ArrayList<>();
-        System.out.println("Count : " + count);
         if(count<this.popSize)
         {
             pop =fillPop(count);

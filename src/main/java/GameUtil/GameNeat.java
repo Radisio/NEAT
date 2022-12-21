@@ -32,12 +32,10 @@ public class GameNeat {
         if(nodeEnv<nbInput-4)
         {
             int difference = nbInput-nodeEnv-4;
-            System.out.println("Difference : " + difference);
             for(int i =0;i<difference;i++)
             {
                 returnedList.add(1.0);
             }
-            System.out.println("returendList size before pos : " + returnedList.size());
         }
         returnedList.add(game.getCreaturePosition().x*1.0);
         returnedList.add(game.getCreaturePosition().y*1.0);

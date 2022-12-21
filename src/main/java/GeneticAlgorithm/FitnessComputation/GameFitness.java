@@ -54,7 +54,6 @@ public class GameFitness extends FitnessComputation{
                 e.printStackTrace();
             }
         }
-        System.out.println("Bonus : ");
         Environment envBonus = EnvironmentUtil.newEnvironmentFromFilePos("D:\\Master2\\Projet2\\NEAT\\src\\main\\resources\\EnvironmentConfigs\\test.txt");
         Game g = new Game(envBonus, new Creature(null));
         try {
