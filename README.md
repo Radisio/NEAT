@@ -19,7 +19,15 @@
  Une classe GameNeat a également été développé, elle contient une méthode "gameToNNInput" qui permet de convertir le jeu en entrée neuronale (une entrée par case), deux 
  entrées pour la position du joueur et deux entrées pour la position du point d'arrivée. Chaque entrées non-utilisé (car environnement plus petit) est mise à 1, comme
  une case occupée.
- 
+### Diagramme
+#### Neural Network
+![NeuralNetwork](annexes/NeuralNetworkPNG.PNG)
+
+#### Fitness Computation
+![FitnessComputation](annexes/FitnessComputation.PNG)
+#### Fitness Comparison
+![FitnessComparison](annexes/FitnessComparisonPNG.PNG)
+
 ## Les tests
   Comme expliqué précédemment, des tests ont été réalisé pour tester différentes parties de l'algorithme génétique. Ces différents tests ont été réalisé à la suite du 
   développement de chacune des parties. Ces tests sont pour la plupart unitaire, cependant je pense que l'on pourrait considérer certains d'entre-eux comme des tests d'intégration
